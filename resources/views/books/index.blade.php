@@ -1,19 +1,8 @@
-{{-- File: resources/views/books/index.blade.php --}}
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Buku</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
-        .success { background: #d1fae5; color: #065f46; padding: 10px 14px; border-radius: 4px; margin-top: 16px; }
-        .btn { display: inline-block; padding: 6px 14px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 4px; }
-        form.inline { display: inline; }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
+
+@section('title', 'Daftar Buku')
+
+@section('content')
     <h1>Daftar Buku</h1>
 
     @if (session('success'))
@@ -66,5 +55,4 @@
     </table>
 
     <p><em>Catatan: data di atas masih data dummy (array statis di Controller), belum dari database. Migration &amp; Model Eloquent baru dibuat di Pertemuan 5.</em></p>
-</body>
-</html>
+@endsection

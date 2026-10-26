@@ -13,7 +13,8 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $members = Member::paginate(10);
+        $members = Member::when(request('search'), fn ($query, $search) => $query->where('nama', 'like', "%{$search}%"))
+            ->paginate(10);
 
         return view('members.index', compact('members'));
     }

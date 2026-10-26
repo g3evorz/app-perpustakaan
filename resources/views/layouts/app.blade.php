@@ -8,6 +8,7 @@
         body { font-family: sans-serif; margin: 0; color: #1f2937; }
         nav { background: #1e3a8a; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
         nav .brand { color: #fff; font-weight: bold; font-size: 18px; }
+        nav a { color: #cbd5e1; text-decoration: none; }
         nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
         nav ul li a { color: #cbd5e1; text-decoration: none; padding: 6px 4px; }
         nav ul li a.active { color: #fff; font-weight: bold; border-bottom: 2px solid #fff; }
@@ -25,6 +26,9 @@
         input, select, textarea { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
         .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
         footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb; margin-top: 40px; }
+        nav .navbar-user { display: flex; align-items: center; gap: 12px; color: #cbd5e1; font-size: 14px; }
+        nav .btn-logout { background: none; border: 1px solid #cbd5e1; color: #cbd5e1; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        nav .btn-logout:hover { background: #1e40af; color: #fff; }
     </style>
 </head>
 <body>

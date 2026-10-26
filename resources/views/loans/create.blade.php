@@ -8,6 +8,7 @@
         body { font-family: sans-serif; margin: 40px; max-width: 500px; }
         label { display: block; margin-top: 12px; font-weight: bold; }
         input, select { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
+        input[readonly] { background: #f3f4f6; cursor: not-allowed; }
         .checkbox-list { border: 1px solid #ccc; border-radius: 4px; padding: 10px; margin-top: 4px; max-height: 200px; overflow-y: auto; }
         .checkbox-list label { display: block; font-weight: normal; margin-top: 0; }
         .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
@@ -34,20 +35,8 @@
             <div class="error">{{ $message }}</div>
         @enderror
 
-        <label for="user_id">Petugas</label>
-        <select name="user_id" id="user_id">
-            <option value="">-- Pilih Petugas --</option>
-            @foreach ($users as $user)
-                <option value="{{ $user['id'] }}" @selected(old('user_id') == $user['id'])>
-                    {{ $user['name'] }}
-                </option>
-            @endforeach
-        </select>
-        @error('user_id')
-            <div class="error">{{ $message }}</div>
-        @enderror
-        <p><em>Catatan: dropdown petugas dipilih manual karena login belum ada - otomatis dari user yang login mulai Pertemuan 8.</em></p>
-
+        <label for="petugas">Petugas</label>
+        <input type="text" id="petugas" value="{{ auth()->user()->name }}" readonly>
         <label for="tanggal_pinjam">Tanggal Pinjam</label>
         <input type="date" name="tanggal_pinjam" id="tanggal_pinjam" value="{{ old('tanggal_pinjam') }}">
         @error('tanggal_pinjam')

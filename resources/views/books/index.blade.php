@@ -5,10 +5,6 @@
 @section('content')
     <h1>Daftar Buku</h1>
 
-    @if (session('success'))
-        <div class="success">{{ session('success') }}</div>
-    @endif
-
     <p><a href="{{ route('books.create') }}" class="btn">+ Tambah Buku</a></p>
 
     <table>

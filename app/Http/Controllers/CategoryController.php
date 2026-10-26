@@ -36,7 +36,7 @@ class CategoryController extends Controller
         Category::create($validated);
 
         return redirect()->route('categories.index')
-            ->with('success', "Kategori \"{$validated['nama_kategori']}\" berhasil ditambahkan (data dummy, belum tersimpan di database).");
+            ->with('success', "Kategori \"{$validated['nama_kategori']}\" berhasil ditambahkan.");
     }
 
     /**

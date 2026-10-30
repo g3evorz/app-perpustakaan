@@ -1,0 +1,59 @@
+{
+  "info": {
+    "name": "App Perpustakaan API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Books",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/buku",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "buku"]
+        }
+      }
+    },
+    {
+      "name": "Add Book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"judul\": \"Belajar Laravel 11\",\n    \"penulis\": \"John Doe\",\n    \"tahun_terbit\": 2026,\n    \"stok\": 10\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/buku",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "buku"]
+        }
+      }
+    },
+    {
+      "name": "Get All Members",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/anggota",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "anggota"]
+        }
+      }
+    }
+  ]
+}

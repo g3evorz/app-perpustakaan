@@ -1,59 +1,222 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Perpustakaan Digital Kampus
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web perpustakaan berbasis Laravel 12 dengan fitur autentikasi petugas/admin, pengelolaan kategori, buku, anggota, peminjaman, pengembalian, laporan, serta REST API.
 
-## About Laravel
+Dashboard dan halaman laporan mengambil data dari API internal aplikasi melalui HTTP, sehingga aplikasi perlu dijalankan pada **dua port**:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- `8000` untuk aplikasi web.
+- `8011` untuk API internal yang dikonsumsi Dashboard dan Laporan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fitur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Login dan logout dengan role `admin` dan `petugas`.
+- Dashboard statistik: total buku, total anggota, dan peminjaman aktif.
+- CRUD kategori (khusus admin).
+- CRUD buku dengan relasi kategori.
+- CRUD anggota dengan validasi NIM dan email unik.
+- Transaksi peminjaman multi-buku.
+- Pengembalian buku dan perubahan status transaksi.
+- Laporan peminjaman dari `GET /api/loans`.
+- REST API buku, anggota, peminjaman, dan statistik.
 
-## Learning Laravel
+## Kebutuhan
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- PHP `>= 8.2`
+- Composer
+- Ekstensi PHP `pdo_sqlite`
+- Git
+- Postman (opsional, untuk demo API)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalasi
 
-## Laravel Sponsors
+### 1. Clone repository
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/g3evorz/app-perpustakaan.git
+cd app-perpustakaan
+```
 
-### Premium Partners
+### 2. Install dependency
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+```
 
-## Contributing
+Jika ingin menjalankan frontend asset bawaan Laravel, jalankan juga:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+npm install
+npm run build
+```
 
-## Code of Conduct
+> Frontend asset tidak wajib untuk demo karena tampilan aplikasi menggunakan CSS inline.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Setup file `.env`
 
-## Security Vulnerabilities
+Salin file contoh environment:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+cp .env.example .env
+```
 
-## License
+Buat file database SQLite:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+touch database/database.sqlite
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+Sesuaikan bagian penting berikut di `.env`:
+
+```dotenv
+APP_NAME="Perpustakaan Digital Kampus"
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=sqlite
+
+INTERNAL_API_URL=http://127.0.0.1:8011
+```
+
+Keterangan:
+
+- `APP_URL` adalah alamat aplikasi web.
+- `DB_CONNECTION=sqlite` memakai database `database/database.sqlite`.
+- `INTERNAL_API_URL` adalah alamat API internal yang dipanggil Dashboard melalui `GET /api/stats` dan halaman Laporan melalui `GET /api/loans`.
+
+Jika `.env` diubah, bersihkan cache konfigurasi:
+
+```bash
+php artisan config:clear
+```
+
+### 4. Migrate dan seed database
+
+Untuk membuat ulang seluruh tabel sekaligus mengisi data contoh:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Perintah ini **menghapus seluruh data lama** di database SQLite.
+
+Jika hanya ingin menjalankan migration dan seeder tanpa menghapus data yang sudah ada:
+
+```bash
+php artisan migrate --seed
+```
+
+Seeder akan membuat akun, kategori, buku, anggota, dan transaksi peminjaman contoh.
+
+### 5. Jalankan dua server
+
+Aplikasi harus berjalan di dua terminal berbeda.
+
+**Terminal 1 - aplikasi web (port 8000):**
+
+```bash
+php artisan serve --host=127.0.0.1 --port=8000
+```
+
+**Terminal 2 - API internal (port 8011):**
+
+```bash
+php artisan serve --host=127.0.0.1 --port=8011
+```
+
+Kedua server menjalankan aplikasi dan database yang sama. Server port `8011` dibutuhkan karena Dashboard dan Laporan memanggil API internal lewat `Http::get()`.
+
+Jika hanya server `8000` yang berjalan:
+
+- Statistik pada Dashboard akan tampil `0`.
+- Halaman `/loans/report` akan tampil kosong.
+
+### 6. Akses aplikasi
+
+Buka:
+
+```text
+http://127.0.0.1:8000/login
+```
+
+Gunakan salah satu akun berikut:
+
+| Nama | Email | Password | Role |
+|---|---|---|---|
+| Bambang Sutrisno | `admin@pens.ac.id` | `password` | admin |
+| Siti Rahmawati | `petugas1@pens.ac.id` | `password` | petugas |
+| Ahmad Fauzi | `petugas2@pens.ac.id` | `password` | petugas |
+
+Gunakan akun **admin** jika ingin mendemokan menu Kategori.
+
+## Endpoint API
+
+Base URL API:
+
+```text
+http://127.0.0.1:8000/api
+```
+
+| Metode | Endpoint | Keterangan |
+|---|---|---|
+| GET | `/api/books` | Daftar buku dengan pagination dan relasi kategori |
+| GET | `/api/books/{id}` | Detail buku |
+| POST | `/api/books` | Tambah buku |
+| PUT | `/api/books/{id}` | Ubah buku |
+| DELETE | `/api/books/{id}` | Hapus buku |
+| GET | `/api/members` | Daftar anggota dengan pagination |
+| GET | `/api/members/{id}` | Detail anggota |
+| GET | `/api/loans` | Daftar peminjaman beserta anggota, petugas, dan buku |
+| POST | `/api/loans` | Buat peminjaman |
+| PUT | `/api/loans/{id}/kembalikan` | Proses pengembalian |
+| GET | `/api/stats` | Statistik dashboard |
+
+## Postman
+
+Import collection berikut ke Postman:
+
+```text
+postman/app-perpustakaan.postman_collection.json
+```
+
+Pastikan collection variable `baseUrl` bernilai:
+
+```text
+http://127.0.0.1:8000/api
+```
+
+## Pengujian
+
+Jalankan test suite:
+
+```bash
+php artisan test
+```
+
+## Troubleshooting
+
+| Gejala | Penyebab | Solusi |
+|---|---|---|
+| Statistik Dashboard `0` | Server API internal port `8011` tidak berjalan | Jalankan `php artisan serve --host=127.0.0.1 --port=8011` di terminal kedua |
+| Halaman laporan kosong | Server API internal port `8011` tidak berjalan | Jalankan server port `8011`, lalu refresh halaman |
+| `could not find driver` saat migrate | Ekstensi `pdo_sqlite` belum aktif | Aktifkan ekstensi `pdo_sqlite` di PHP |
+| `Database file at path ... does not exist` | File SQLite belum dibuat | Jalankan `touch database/database.sqlite` |
+| Perubahan `.env` tidak terbaca | Cache konfigurasi masih lama | Jalankan `php artisan config:clear` |
+| Menu Kategori tidak muncul atau `403` | Login sebagai petugas | Login dengan akun admin |
+| Postman gagal connect | Server port `8000` tidak berjalan atau `baseUrl` salah | Pastikan server berjalan dan `baseUrl` = `http://127.0.0.1:8000/api` |
+
+## Skenario Demo
+
+Urutan demo UAS tersedia di:
+
+```text
+DEMO.md
+```
+
+## Lisensi
+
+MIT
